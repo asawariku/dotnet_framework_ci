@@ -28,18 +28,22 @@ jobs:
         with:
           sdk: '3.1.x'  # Adjust to your version of .NET Framework, if needed
 
+      # Navigate to the project folder (if your project is in a subfolder)
+      - name: Change directory to MyDotNetApp
+        run: cd MyDotNetApp
+
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore MyDotNetApp.csproj  # Specify path to .csproj or .sln file
 
       - name: Build project
-        run: dotnet build --configuration Release
+        run: dotnet build MyDotNetApp.csproj --configuration Release  # Specify path to .csproj or .sln file
 
       - name: Run tests
-        run: dotnet test --configuration Release
+        run: dotnet test MyDotNetApp.csproj --configuration Release  # Specify path to .csproj or .sln file
 
       - name: Publish project (if on main branch)
         if: github.ref == 'refs/heads/main'  # Condition at step level
-        run: dotnet publish --configuration Release --output ./publish
+        run: dotnet publish MyDotNetApp.csproj --configuration Release --output ./publish  # Specify path to .csproj or .sln file
 
   deploy:
     runs-on: windows-latest
