@@ -33,17 +33,17 @@ jobs:
         run: cd MyDotNetApp
 
       - name: Restore dependencies
-        run: dotnet restore MyDotNetApp.csproj  # Specify path to .csproj or .sln file
+        run: dotnet restore MyDotNetApp/MyDotNetApp.csproj  # Specify path to .csproj or .sln file
 
       - name: Build project
-        run: dotnet build MyDotNetApp.csproj --configuration Release  # Specify path to .csproj or .sln file
+        run: dotnet build MyDotNetApp/MyDotNetApp.csproj --configuration Release  # Specify path to .csproj or .sln file
 
       - name: Run tests
-        run: dotnet test MyDotNetApp.csproj --configuration Release  # Specify path to .csproj or .sln file
+        run: dotnet test MyDotNetApp/MyDotNetApp.csproj --configuration Release  # Specify path to .csproj or .sln file
 
       - name: Publish project (if on main branch)
         if: github.ref == 'refs/heads/main'  # Condition at step level
-        run: dotnet publish MyDotNetApp.csproj --configuration Release --output ./publish  # Specify path to .csproj or .sln file
+        run: dotnet publish MyDotNetApp/MyDotNetApp.csproj --configuration Release --output ./publish  # Specify path to .csproj or .sln file
 
   deploy:
     runs-on: windows-latest
