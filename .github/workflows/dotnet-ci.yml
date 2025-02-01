@@ -1,0 +1,55 @@
+name: .NET Framework CI Workflow
+
+# Trigger events
+on:
+  push:
+    branches:
+      - main
+      - '**'  # This will trigger for any branch
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'  # This runs daily at midnight
+
+jobs:
+  build:
+    runs-on: windows-latest  # Running on Windows for .NET Framework
+
+    # Condition at job level: Only run this job for pushes to the 'main' branch
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up .NET Framework
+        uses: actions/setup-dotnet@v2
+        with:
+          sdk: '3.1.x'  # Adjust to your version of .NET Framework, if needed
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --configuration Release
+
+      - name: Run tests
+        run: dotnet test --configuration Release
+
+      - name: Publish project (if on main branch)
+        if: github.ref == 'refs/heads/main'  # Condition at step level
+        run: dotnet publish --configuration Release --output ./publish
+
+  deploy:
+    runs-on: windows-latest
+
+    # Only run deploy on pull requests targeting the 'main' branch
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Deploy (this is a placeholder step)
+        run: echo "Deploying to production server..."  # Replace with actual deploy commands
